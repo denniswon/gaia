@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  init-validator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gaiad:local
+    env_file: .env
+    command: gaiad testnet --chain-id ${CHAIN_ID} --v ${NUMS_OF_VALIDATOR} 
+      --output-dir /genesis --starting-ip-address ${BOOTSTRAP_IP_ADDRESS} 
+      --keyring-backend ${KEYRING_BACKEND} --minimum-gas-prices ${MIN_GAS_PRICE}
+      --node-dir-prefix 'validator'
+    # command: gaiad testnet --help
+    # command: gaiad init node0 --chain-id ${CHAIN_ID} --home /genesis
+    volumes:
+      - ./storage:/genesis

@@ -232,7 +232,33 @@ start-localnet-ci:
 	sed -i'' 's/minimum-gas-prices = ""/minimum-gas-prices = "0uatom"/' ~/.gaiad-liveness/config/app.toml
 	./build/gaiad start --home ~/.gaiad-liveness --mode validator --x-crisis-skip-assert-invariants
 
-.PHONY: start-localnet-ci
+dev-build:
+	docker-compose -f docker-compose.bootstrap.yml build
+
+dev-init-validator:
+	make dev-reset
+	docker-compose -f docker-compose.bootstrap.yml run init-validator
+
+dev-init-node:
+	bash init-node.sh
+
+dev-start-cluster:
+	docker-compose up -d
+	docker-compose -f docker-compose.monitor.yml up -d
+
+dev-reset:
+	docker-compose stop
+	docker-compose -f docker-compose.monitor.yml stop
+	rm -rf storage
+	docker system prune -f
+
+dev:
+	make dev-build
+	make dev-init-validator
+	make dev-init-node
+	make dev-start-cluster
+
+.PHONY: start-localnet-ci dev-build dev-init-validator dev-init-node dev-start-cluster dev-reset
 
 ###############################################################################
 ###                                Docker                                   ###

@@ -1,0 +1,120 @@
+version: '3'
+
+services:
+  validator0:
+    container_name: validator0
+    image: gaiad:local
+    command: gaiad start --mode validator --home /gaiad --api.enable=false --grpc.enable=false --grpc-web.enable=false
+    ports:
+      - 26656:26656 # p2p networking port
+      - 26657:26657 # Tendermint RPC port
+      - 26658:26658 # ABCI socket port
+    volumes:
+      - ./storage/validator0/gaiad:/gaiad
+    networks:
+      gaia-docker:
+        ipv4_address: 192.168.10.2
+
+  validator1:
+    container_name: validator1
+    image: gaiad:local
+    command: gaiad start --mode validator --home /gaiad --api.enable=false --grpc.enable=false --grpc-web.enable=false
+    volumes:
+      - ./storage/validator1/gaiad:/gaiad
+    networks:
+      gaia-docker:
+        ipv4_address: 192.168.10.3
+
+  validator2:
+    container_name: validator2
+    image: gaiad:local
+    command: gaiad start --mode validator --home /gaiad --api.enable=false --grpc.enable=false --grpc-web.enable=false
+    volumes:
+      - ./storage/validator2/gaiad:/gaiad
+    networks:
+      gaia-docker:
+        ipv4_address: 192.168.10.4
+
+  validator3:
+    container_name: validator3
+    image: gaiad:local
+    command: gaiad start --mode validator --home /gaiad --api.enable=false --grpc.enable=false --grpc-web.enable=false
+    volumes:
+      - ./storage/validator3/gaiad:/gaiad
+    networks:
+      gaia-docker:
+        ipv4_address: 192.168.10.5
+
+  node0:
+    container_name: node0
+    image: gaiad:local
+    command: gaiad start --mode full --home /gaiad --api.enable --grpc.enable --grpc-web.enable
+    ports:
+      - 1317:1317 # api port
+      - 9090:9090 # grpc port
+      - 9091:9091 # web-grpc port
+    volumes:
+      - ./storage/node0:/gaiad
+    networks:
+      - gaia-docker
+  
+  node1:
+    container_name: node1
+    image: gaiad:local
+    command: gaiad start --mode full --home /gaiad --api.enable --api.enable --grpc.enable --grpc-web.enable
+    volumes:
+      - ./storage/node1:/gaiad
+    networks:
+      - gaia-docker
+
+  node2:
+    container_name: node2
+    image: gaiad:local
+    command: gaiad start --mode full --home /gaiad --api.enable --api.enable --grpc.enable --grpc-web.enable
+    volumes:
+      - ./storage/node2:/gaiad
+    networks:
+      - gaia-docker
+
+  node3:
+    container_name: node3
+    image: gaiad:local
+    command: gaiad start --mode full --home /gaiad --api.enable --api.enable --grpc.enable --grpc-web.enable
+    volumes:
+      - ./storage/node3:/gaiad
+    networks:
+      - gaia-docker
+
+  node4:
+    container_name: node4
+    image: gaiad:local
+    command: gaiad start --mode full --home /gaiad --api.enable --api.enable --grpc.enable --grpc-web.enable
+    volumes:
+      - ./storage/node4:/gaiad
+    networks:
+      - gaia-docker
+
+  node5:
+    container_name: node5
+    image: gaiad:local
+    command: gaiad start --mode full --home /gaiad --api.enable --grpc.enable --grpc-web.enable
+    volumes:
+      - ./storage/node5:/gaiad
+    networks:
+      - gaia-docker
+  
+  # explorer:
+  #   build:
+  #     context: ./explorer
+  #   ports:
+  #     - 8080:8080
+  #   networks:
+  #     - gaia-docker
+
+networks:
+  gaia-docker:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/16
